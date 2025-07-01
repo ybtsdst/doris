@@ -1,6 +1,11 @@
 FROM ubuntu:22.04
 
+ARG http_proxy    
+ARG https_proxy
+
 ENV DEBIAN_FRONTEND=noninteractive    
+ENV HTTP_PROXY=${http_proxy}
+ENV HTTPS_PROXY=${https_proxy}
     
 RUN \
   sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list && \
