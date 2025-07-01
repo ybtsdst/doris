@@ -1,0 +1,53 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/cpp
+{
+	"name": "doris dev",
+	"image": "doris_build:latest",
+	"runArgs": [
+		"--privileged",
+		"--cap-add=SYS_PTRACE",
+		"--security-opt",
+		"seccomp=unconfined"
+	],
+	"mounts": [
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+		"source=/home/ybtsdst/.m2,target=/root/.m2,type=bind"
+	],
+	"workspaceMount": "source=${localWorkspaceFolder},target=/opt/transwarp/doris,type=bind,consistency=cached",
+	"workspaceFolder": "/opt/transwarp/doris",
+	"customizations": {
+		"vscode": {
+			// Set *default* container specific settings.json values on container create.
+			"settings": {
+				"terminal.integrated.shell.linux": "/bin/bash",
+				"C_Cpp.default.cppStandard": "c++20",
+				"C_Cpp.default.cStandard": "c17",
+				"C_Cpp.default.browse.databaseFilename": "${workspaceFolder}/.vscode/.browse.c_cpp.db",
+			},
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"ms-vscode.cpptools",
+				"ms-vscode.cpptools-extension-pack",
+				"foxundermoon.shell-format",
+				"redhat.vscode-yaml",
+				"ms-azuretools.vscode-docker",
+				"ms-vscode.cmake-tools",
+				"josetr.cmake-language-support-vscode",
+				"cheshirekow.cmake-format",
+				"EditorConfig.EditorConfig",
+				"cschlosser.doxdocgen",
+				"codezombiech.gitignore",
+				"SonarSource.sonarlint-vscode",
+				"GitHub.copilot",
+				"zxh404.vscode-proto3",
+				"llvm-vs-code-extensions.vscode-clangd"
+			]
+		}
+	},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh"
+	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	// "remoteUser": "vscode"
+}
