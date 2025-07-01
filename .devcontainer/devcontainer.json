@@ -2,16 +2,19 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/cpp
 {
 	"name": "doris dev",
-	"image": "doris_build:latest",
+	"image": "doris_build:20250707_70ee521660",
 	"runArgs": [
+		"--network=host",
 		"--privileged",
 		"--cap-add=SYS_PTRACE",
 		"--security-opt",
-		"seccomp=unconfined"
+		"seccomp=unconfined",
+		"--env-file",".devcontainer/.env"
 	],
 	"mounts": [
 		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
-		"source=/home/ybtsdst/.m2,target=/root/.m2,type=bind"
+		"source=${localEnv:LOCAL_MVN_REPO},target=/root/.m2,type=bind",
+		"source=${localEnv:LOCAL_CCACHE},target=/opt/ccache,type=bind"
 	],
 	"workspaceMount": "source=${localWorkspaceFolder},target=/opt/transwarp/doris,type=bind,consistency=cached",
 	"workspaceFolder": "/opt/transwarp/doris",
