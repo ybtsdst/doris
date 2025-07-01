@@ -1150,11 +1150,15 @@ under the License.
                             <environmentVariables>
                                 <DORIS_HOME>${doris.home}</DORIS_HOME>
                             </environmentVariables>
-                            <environmentScript>${doris.home}/env.sh</environmentScript>
-                            <executable>make</executable>
+<!--                            <environmentScript>${doris.home}/env.sh</environmentScript>-->
+<!--                            <executable>make</executable>-->
+<!--                            <arguments>-->
+<!--                                <argument>-C</argument>-->
+<!--                                <argument>${doris.home}/gensrc/script</argument>-->
+<!--                            </arguments>-->
+                            <executable>/bin/bash</executable>
                             <arguments>
-                                <argument>-C</argument>
-                                <argument>${doris.home}/gensrc/script</argument>
+                                <argument>${doris.home}/.devcontainer/gensrc_wrap.sh</argument>
                             </arguments>
                             <skip>${skip.plugin}</skip>
                         </configuration>

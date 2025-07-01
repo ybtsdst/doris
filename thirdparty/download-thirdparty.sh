@@ -329,9 +329,11 @@ fi
 # this is for librdkafka with sasl
 if [[ " ${TP_ARCHIVES[*]} " =~ " CYRUS_SASL " ]]; then
     cd "${TP_SOURCE_DIR}/${CYRUS_SASL_SOURCE}"
-    if [[ ! -f ${PATCHED_MARK} ]]; then
-        patch -p1 <"${TP_PATCH_DIR}/cyrus-sasl-2.1.27.patch"
-        touch "${PATCHED_MARK}"
+    if [ -z "$SKIP_CYRUS_PATCH" ]; then
+        if [[ ! -f ${PATCHED_MARK} ]]; then
+            patch -p1 <"${TP_PATCH_DIR}/cyrus-sasl-2.1.27.patch"
+            touch "${PATCHED_MARK}"
+        fi
     fi
     cd -
     echo "Finished patching ${CYRUS_SASL_SOURCE}"

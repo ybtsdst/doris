@@ -18,6 +18,12 @@
 
 set -eo pipefail
 
+unset http_proxy
+unset https_proxy
+unset HTTP_PROXY
+unset HTTPS_PROXY
+unset ALL_PROXY
+
 curdir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 MACHINE_OS=$(uname -s)
