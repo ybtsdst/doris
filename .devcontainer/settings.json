@@ -1,7 +1,7 @@
 {
     "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m -Xlog:disable",
-    "sonarlint.pathToCompileCommands": "/opt/transwarp/shiva/build/compile_commands.json",
-    "sonarlint.testFilePattern": "{/build/shiva/thirdparty/installed/include/**, /usr/include/**, /opt/transwarp/shiva/include/shiva/**}",
+    "sonarlint.pathToCompileCommands": "/opt/transwarp/doris/be/build_Release/compile_commands.json",
+    "sonarlint.testFilePattern": "{/opt/transwarp/doris/thirdparty/installed/include/**, /usr/include/**}",
     "cmake.generator": "Unix Makefiles",
     "editor.quickSuggestions": {
         "other": "on",
@@ -33,9 +33,9 @@
         "--query-driver=/usr/bin/gcc",
         "--suggest-missing-includes",
         "--cross-file-rename",
-        "--compile-commands-dir=/opt/transwarp/shiva/build",
+        "--compile-commands-dir=/opt/transwarp/doris/be/build_Debug",
         "--completion-style=detailed",
-        "-j=4",
+        "-j=40",
         "--all-scopes-completion",
         // "--limit-references=100",
         // "--limit-results=20",

@@ -27,7 +27,7 @@ function create_user {
   useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
 
   # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
-  dnf install -y sudo
+  apt install -y sudo
   echo $USERNAME ALL=\(root\) NOPASSWD:ALL >/etc/sudoers.d/$USERNAME
   chmod 0440 /etc/sudoers.d/$USERNAME
 }
@@ -48,21 +48,20 @@ function main {
   # need to reload vscode to enable cmake language server
 
   # install_by_script
-  install_by_dnf
+#   install_by_dnf
 
   # install other deps
-  dnf install -y gdb net-tools telnet ccache
-  dnf clean all
 
   install_clangd
 
   mkdir -p /root/.ccache
   echo "max_size = 20.0G" >>/root/.ccache/ccache.conf
+  echo "cache_dir = /opt/ccache" >> /root/.ccache/ccache.conf
 
   create_user
 
-  echo "unset http_proxy" >>/root/.bashrc
-  echo "unset https_proxy" >>/root/.bashrc
+#   echo "unset http_proxy" >>/root/.bashrc
+#   echo "unset https_proxy" >>/root/.bashrc
   echo 'export PATH=/usr/local/lib/clangd/bin/:$PATH' >>/root/.bashrc
 
   # enable coredump
@@ -72,7 +71,7 @@ function main {
   # replace container settings.json with our project settings.json
   pushd /root/.vscode-server/data/Machine
   rm -rf settings.json
-  ln -s /opt/transwarp/shiva/.devcontainer/settings.json settings.json
+  ln -s /opt/transwarp/doris/.devcontainer/settings.json settings.json
   popd
 }
 
