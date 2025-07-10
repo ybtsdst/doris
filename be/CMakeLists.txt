@@ -19,6 +19,8 @@ cmake_minimum_required(VERSION 3.19.2)
 
 project(doris CXX C)
 
+add_compile_options(-Wno-error=attributes)
+
 # Write compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # set platforms
@@ -474,7 +476,8 @@ else()
         jvm
     )
     add_library(jvm SHARED IMPORTED)
-    set_target_properties(jvm PROPERTIES IMPORTED_LOCATION ${LIB_JVM})
+    # set_target_properties(jvm PROPERTIES IMPORTED_LOCATION ${LIB_JVM})
+    set_target_properties(jvm PROPERTIES IMPORTED_LOCATION /lib/jvm/java-17-openjdk-amd64/lib/server/libjvm.so)
     include_directories(${DORIS_JAVA_HOME}/include)
     if (NOT OS_MACOSX)
         include_directories(${DORIS_JAVA_HOME}/include/linux)

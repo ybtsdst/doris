@@ -19,6 +19,7 @@
 
 #include <glog/logging.h>
 
+#include <bit>
 #include <array>
 #include <bit> // IWYU pragma: keep
 #include <cstring>
