@@ -6,12 +6,6 @@ common_build_args="
   --build-arg https_proxy=http://127.0.0.1:18080
 "
 
-# common_build_args="
-#   --network=host
-#   --build-arg http_proxy=http://172.16.238.185:58591
-#   --build-arg https_proxy=http://172.16.238.185:58591
-# "
-
 common_runtime_args="
   --network=host
 "
