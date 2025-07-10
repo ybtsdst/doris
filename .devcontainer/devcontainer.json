@@ -2,7 +2,7 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/cpp
 {
 	"name": "doris dev",
-	"image": "doris_build:20250707_70ee521660",
+	"image": "doris_build:20250707_8849ea0415",
 	"runArgs": [
 		"--network=host",
 		"--privileged",
@@ -43,7 +43,8 @@
 				"SonarSource.sonarlint-vscode",
 				"GitHub.copilot",
 				"zxh404.vscode-proto3",
-				"llvm-vs-code-extensions.vscode-clangd"
+				"llvm-vs-code-extensions.vscode-clangd",
+				"cduruk.thrift"
 			]
 		}
 	},
