@@ -20,6 +20,7 @@ package org.apache.doris.nereids.trees.plans.visitor;
 import org.apache.doris.nereids.analyzer.UnboundOneRowRelation;
 import org.apache.doris.nereids.analyzer.UnboundRelation;
 import org.apache.doris.nereids.analyzer.UnboundTVFRelation;
+import org.apache.doris.nereids.trees.plans.logical.LogicalArgoScan;
 import org.apache.doris.nereids.trees.plans.logical.LogicalCatalogRelation;
 import org.apache.doris.nereids.trees.plans.logical.LogicalDeferMaterializeOlapScan;
 import org.apache.doris.nereids.trees.plans.logical.LogicalEmptyRelation;
@@ -34,6 +35,7 @@ import org.apache.doris.nereids.trees.plans.logical.LogicalRelation;
 import org.apache.doris.nereids.trees.plans.logical.LogicalSchemaScan;
 import org.apache.doris.nereids.trees.plans.logical.LogicalTVFRelation;
 import org.apache.doris.nereids.trees.plans.logical.LogicalTestScan;
+import org.apache.doris.nereids.trees.plans.physical.PhysicalArgoScan;
 import org.apache.doris.nereids.trees.plans.physical.PhysicalCTEConsumer;
 import org.apache.doris.nereids.trees.plans.physical.PhysicalCatalogRelation;
 import org.apache.doris.nereids.trees.plans.physical.PhysicalDeferMaterializeOlapScan;
@@ -139,6 +141,10 @@ public interface RelationVisitor<R, C> {
         return visitLogicalCatalogRelation(testScan, context);
     }
 
+    default R visitLogicalArgoScan(LogicalArgoScan argoScan, C context) {
+        return visitLogicalCatalogRelation(argoScan, context);
+    }
+
     // *******************************
     // physical relations
     // *******************************
@@ -190,5 +196,9 @@ public interface RelationVisitor<R, C> {
 
     default R visitPhysicalCTEConsumer(PhysicalCTEConsumer consumer, C context) {
         return visitPhysicalRelation(consumer, context);
+    }
+
+    default R visitPhysicalArgoScan(PhysicalArgoScan argoScan, C context) {
+        return visitPhysicalRelation(argoScan, context);
     }
 }

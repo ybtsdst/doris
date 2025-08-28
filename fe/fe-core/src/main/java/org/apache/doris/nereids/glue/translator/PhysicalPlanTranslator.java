@@ -48,6 +48,7 @@ import org.apache.doris.catalog.TableIf;
 import org.apache.doris.catalog.Type;
 import org.apache.doris.datasource.ExternalTable;
 import org.apache.doris.datasource.FileQueryScanNode;
+import org.apache.doris.datasource.argo.source.ArgoScanNode;
 import org.apache.doris.datasource.es.EsExternalTable;
 import org.apache.doris.datasource.es.source.EsScanNode;
 import org.apache.doris.datasource.hive.HMSExternalTable;
@@ -109,6 +110,7 @@ import org.apache.doris.nereids.trees.plans.PreAggStatus;
 import org.apache.doris.nereids.trees.plans.algebra.Aggregate;
 import org.apache.doris.nereids.trees.plans.physical.AbstractPhysicalJoin;
 import org.apache.doris.nereids.trees.plans.physical.AbstractPhysicalSort;
+import org.apache.doris.nereids.trees.plans.physical.PhysicalArgoScan;
 import org.apache.doris.nereids.trees.plans.physical.PhysicalAssertNumRows;
 import org.apache.doris.nereids.trees.plans.physical.PhysicalCTEAnchor;
 import org.apache.doris.nereids.trees.plans.physical.PhysicalCTEConsumer;
@@ -942,6 +944,27 @@ public class PhysicalPlanTranslator extends DefaultPlanVisitor<PlanFragment, Pla
         return planFragment;
     }
 
+    @Override
+    public PlanFragment visitPhysicalArgoScan(PhysicalArgoScan argoScan, PlanTranslatorContext context) {
+        List<Slot> slots = argoScan.getOutput();
+        TableIf table = argoScan.getTable();
+        TupleDescriptor tupleDescriptor = generateTupleDesc(slots, table, context);
+        ArgoScanNode argoScanNode = new ArgoScanNode(context.nextPlanNodeId(), tupleDescriptor);
+        argoScanNode.setNereidsId(argoScan.getId());
+        Utils.execWithUncheckedException(argoScanNode::init);
+        context.addScanNode(argoScanNode, argoScan);
+        context.getRuntimeTranslator().ifPresent(
+            runtimeFilterGenerator -> runtimeFilterGenerator.getContext().getTargetListByScan(argoScan).forEach(
+                expr -> runtimeFilterGenerator.translateRuntimeFilterTarget(expr, argoScanNode, context)
+            )
+        );
+        context.getTopnFilterContext().translateTarget(argoScan, argoScanNode, context);
+        DataPartition dataPartition = DataPartition.RANDOM;
+        PlanFragment planFragment = new PlanFragment(context.nextFragmentId(), argoScanNode, dataPartition);
+        context.addPlanFragment(planFragment);
+        updateLegacyPlanIdToPhysicalPlan(planFragment.getPlanRoot(), argoScan);
+        return planFragment;
+    }
 
     /* ********************************************************************************************
      * other Node, in lexicographical order, ignore algorithm name. for example, HashAggregate -> Aggregate

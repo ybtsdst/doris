@@ -23,6 +23,7 @@ unset https_proxy
 unset HTTP_PROXY
 unset HTTPS_PROXY
 unset ALL_PROXY
+export LD_LIBRARY_PATH=/opt/transwarp/doris/thirdparty/installed/lib:/opt/transwarp/doris/thirdparty/tddms_client/lib
 
 curdir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 

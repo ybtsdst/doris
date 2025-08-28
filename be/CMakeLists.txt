@@ -690,6 +690,17 @@ else()
     endif()
 endif()
 
+# Add tddms deps
+set(TDDMS_INCLUDE_DIR $ENV{DORIS_THIRDPARTY}/tddms_client/include)
+set(TDDMS_LIB_DIR $ENV{DORIS_THIRDPARTY}/tddms_client/lib)
+set(DORIS_LINK_LIBS ${DORIS_LINK_LIBS} shiva_client)
+link_directories(${TDDMS_LIB_DIR} ${TDDMS_LIB_DIR})
+
+# Enable multithread for linking; see ld.gold --help
+if(COMPILER_GCC)
+    set(DORIS_LINK_LIBS "${DORIS_LINK_LIBS} -fuse-ld=gold -Wl,--threads -Wl,--thread-count=4")
+endif()
+
 # Set libraries for test
 set (TEST_LINK_LIBS ${DORIS_LINK_LIBS}
     ${WL_START_GROUP}

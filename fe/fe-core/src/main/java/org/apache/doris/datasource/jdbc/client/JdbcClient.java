@@ -17,6 +17,10 @@
 
 package org.apache.doris.datasource.jdbc.client;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+import com.zaxxer.hikari.HikariDataSource;
+import lombok.Getter;
 import org.apache.doris.catalog.Column;
 import org.apache.doris.catalog.JdbcResource;
 import org.apache.doris.catalog.ScalarType;
@@ -24,12 +28,8 @@ import org.apache.doris.catalog.Type;
 import org.apache.doris.cloud.security.SecurityChecker;
 import org.apache.doris.common.DdlException;
 import org.apache.doris.common.util.Util;
+import org.apache.doris.datasource.argo.util.ArgoJdbcDriverClassLoader;
 import org.apache.doris.datasource.jdbc.util.JdbcFieldSchema;
-
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
-import com.zaxxer.hikari.HikariDataSource;
-import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -93,6 +93,8 @@ public abstract class JdbcClient {
                 return new JdbcDB2Client(jdbcClientConfig);
             case JdbcResource.GBASE:
                 return new JdbcGbaseClient(jdbcClientConfig);
+            case JdbcResource.ARGO:
+                return new JdbcArgoClient(jdbcClientConfig);
             default:
                 throw new IllegalArgumentException("Unsupported DB type: " + dbType);
         }
@@ -172,7 +174,11 @@ public abstract class JdbcClient {
                 this.classLoader = classLoaderMap.get(urls[0]);
             } else {
                 ClassLoader parent = getClass().getClassLoader();
-                this.classLoader = URLClassLoader.newInstance(urls, parent);
+                if (this.dbType.equals(JdbcResource.ARGO)) {
+                    this.classLoader = URLClassLoader.newInstance(urls, new ArgoJdbcDriverClassLoader(parent));
+                } else {
+                    this.classLoader = URLClassLoader.newInstance(urls, parent);
+                }
                 classLoaderMap.put(urls[0], this.classLoader);
             }
         } catch (MalformedURLException e) {

@@ -43,6 +43,7 @@
 #include "pipeline/exec/aggregation_source_operator.h"
 #include "pipeline/exec/analytic_sink_operator.h"
 #include "pipeline/exec/analytic_source_operator.h"
+#include "pipeline/exec/argo_scan_operator.h"
 #include "pipeline/exec/assert_num_rows_operator.h"
 #include "pipeline/exec/cache_sink_operator.h"
 #include "pipeline/exec/cache_source_operator.h"
@@ -1215,6 +1216,13 @@ Status PipelineFragmentContext::_create_operator(ObjectPool* pool, const TPlanNo
     case TPlanNodeType::ES_SCAN_NODE:
     case TPlanNodeType::ES_HTTP_SCAN_NODE: {
         op.reset(new EsScanOperatorX(pool, tnode, next_operator_id(), descs, _num_instances));
+        RETURN_IF_ERROR(cur_pipe->add_operator(
+                op, request.__isset.parallel_instances ? request.parallel_instances : 0));
+        fe_with_old_version = !tnode.__isset.is_serial_operator;
+        break;
+    }
+    case TPlanNodeType::ARGO_SCAN_NODE:{
+        op.reset(new ArgoScanOperatorX(pool, tnode, next_operator_id(), descs, _num_instances));
         RETURN_IF_ERROR(cur_pipe->add_operator(
                 op, request.__isset.parallel_instances ? request.parallel_instances : 0));
         fe_with_old_version = !tnode.__isset.is_serial_operator;

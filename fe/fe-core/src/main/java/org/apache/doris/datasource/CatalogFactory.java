@@ -28,6 +28,7 @@ import org.apache.doris.catalog.Env;
 import org.apache.doris.catalog.Resource;
 import org.apache.doris.common.DdlException;
 import org.apache.doris.common.FeConstants;
+import org.apache.doris.datasource.argo.ArgoExternalCatalog;
 import org.apache.doris.datasource.es.EsExternalCatalog;
 import org.apache.doris.datasource.hive.HMSExternalCatalog;
 import org.apache.doris.datasource.iceberg.IcebergExternalCatalogFactory;
@@ -146,6 +147,9 @@ public class CatalogFactory {
                     throw new DdlException("test catalog is only for FE unit test");
                 }
                 catalog = new TestExternalCatalog(catalogId, name, resource, props, comment);
+                break;
+            case "argo":
+                catalog = new ArgoExternalCatalog(catalogId, name, resource, props, comment);
                 break;
             default:
                 throw new DdlException("Unknown catalog type: " + catalogType);

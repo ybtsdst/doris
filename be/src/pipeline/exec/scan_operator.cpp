@@ -23,6 +23,7 @@
 #include <memory>
 
 #include "pipeline/common/runtime_filter_consumer.h"
+#include "pipeline/exec/argo_scan_operator.h"
 #include "pipeline/exec/es_scan_operator.h"
 #include "pipeline/exec/file_scan_operator.h"
 #include "pipeline/exec/group_commit_scan_operator.h"
@@ -1322,6 +1323,8 @@ template class ScanOperatorX<EsScanLocalState>;
 template class ScanLocalState<EsScanLocalState>;
 template class ScanLocalState<MetaScanLocalState>;
 template class ScanOperatorX<MetaScanLocalState>;
+template class ScanLocalState<ArgoScanLocalState>;
+template class ScanOperatorX<ArgoScanLocalState>;
 template class ScanOperatorX<GroupCommitLocalState>;
 template class ScanLocalState<GroupCommitLocalState>;
 

@@ -28,5 +28,6 @@ endif ()
 add_library(Vec STATIC
         ${VEC_FILES}
 )
+target_include_directories(Vec PRIVATE ${TDDMS_INCLUDE_DIR})
 
 pch_reuse(Vec)

@@ -68,6 +68,7 @@ import org.apache.doris.nereids.trees.plans.algebra.TopN;
 import org.apache.doris.nereids.trees.plans.algebra.Union;
 import org.apache.doris.nereids.trees.plans.algebra.Window;
 import org.apache.doris.nereids.trees.plans.logical.LogicalAggregate;
+import org.apache.doris.nereids.trees.plans.logical.LogicalArgoScan;
 import org.apache.doris.nereids.trees.plans.logical.LogicalAssertNumRows;
 import org.apache.doris.nereids.trees.plans.logical.LogicalCTEAnchor;
 import org.apache.doris.nereids.trees.plans.logical.LogicalCTEConsumer;
@@ -100,6 +101,7 @@ import org.apache.doris.nereids.trees.plans.logical.LogicalTVFRelation;
 import org.apache.doris.nereids.trees.plans.logical.LogicalTopN;
 import org.apache.doris.nereids.trees.plans.logical.LogicalUnion;
 import org.apache.doris.nereids.trees.plans.logical.LogicalWindow;
+import org.apache.doris.nereids.trees.plans.physical.PhysicalArgoScan;
 import org.apache.doris.nereids.trees.plans.physical.PhysicalAssertNumRows;
 import org.apache.doris.nereids.trees.plans.physical.PhysicalCTEAnchor;
 import org.apache.doris.nereids.trees.plans.physical.PhysicalCTEConsumer;
@@ -794,6 +796,12 @@ public class StatsCalculator extends DefaultPlanVisitor<Statistics, Void> {
     }
 
     @Override
+    public Statistics visitLogicalArgoScan(LogicalArgoScan argoScan, Void context) {
+        argoScan.getExpressions();
+        return computeCatalogRelation(argoScan);
+    }
+
+    @Override
     public Statistics visitLogicalProject(LogicalProject<? extends Plan> project, Void context) {
         return computeProject(project);
     }
@@ -945,6 +953,11 @@ public class StatsCalculator extends DefaultPlanVisitor<Statistics, Void> {
     @Override
     public Statistics visitPhysicalEsScan(PhysicalEsScan esScan, Void context) {
         return computeCatalogRelation(esScan);
+    }
+
+    @Override
+    public Statistics visitPhysicalArgoScan(PhysicalArgoScan argoScan, Void context) {
+        return computeCatalogRelation(argoScan);
     }
 
     @Override

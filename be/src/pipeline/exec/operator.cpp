@@ -23,6 +23,7 @@
 #include "pipeline/exec/aggregation_source_operator.h"
 #include "pipeline/exec/analytic_sink_operator.h"
 #include "pipeline/exec/analytic_source_operator.h"
+#include "pipeline/exec/argo_scan_operator.h"
 #include "pipeline/exec/assert_num_rows_operator.h"
 #include "pipeline/exec/cache_sink_operator.h"
 #include "pipeline/exec/cache_source_operator.h"
@@ -701,6 +702,7 @@ DECLARE_OPERATOR(GroupCommitLocalState)
 DECLARE_OPERATOR(JDBCScanLocalState)
 DECLARE_OPERATOR(FileScanLocalState)
 DECLARE_OPERATOR(EsScanLocalState)
+DECLARE_OPERATOR(ArgoScanLocalState)
 DECLARE_OPERATOR(AnalyticLocalState)
 DECLARE_OPERATOR(SortLocalState)
 DECLARE_OPERATOR(SpillSortLocalState)

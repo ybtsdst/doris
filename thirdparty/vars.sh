@@ -209,6 +209,12 @@ ROCKSDB_NAME=rocksdb-5.14.2.tar.gz
 ROCKSDB_SOURCE=rocksdb-5.14.2
 ROCKSDB_MD5SUM="b72720ea3b1e9ca9e4ed0febfef65b14"
 
+# for cyrus-sasl
+LMDB_DOWNLOAD="https://github.com/LMDB/lmdb/archive/refs/tags/LMDB_0.9.31.tar.gz"
+LMDB_NAME=lmdb-0.9.31.tar.gz
+LMDB_SOURCE=lmdb-LMDB_0.9.31
+LMDB_MD5SUM="9d7f059b1624d0a4d4b2f1781d08d600"
+
 # cyrus-sasl
 CYRUS_SASL_DOWNLOAD="https://github.com/cyrusimap/cyrus-sasl/releases/download/cyrus-sasl-2.1.27/cyrus-sasl-2.1.27.tar.gz"
 CYRUS_SASL_NAME=cyrus-sasl-2.1.27.tar.gz
@@ -564,6 +570,7 @@ export TP_ARCHIVES=(
     'LEVELDB'
     'BRPC'
     'ROCKSDB'
+    'LMDB'
     'CYRUS_SASL'
     'LIBRDKAFKA'
     'FLATBUFFERS'

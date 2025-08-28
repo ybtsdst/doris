@@ -72,6 +72,7 @@ import org.apache.doris.nereids.trees.plans.Plan;
 import org.apache.doris.nereids.trees.plans.PreAggStatus;
 import org.apache.doris.nereids.trees.plans.algebra.Relation;
 import org.apache.doris.nereids.trees.plans.logical.LogicalAggregate;
+import org.apache.doris.nereids.trees.plans.logical.LogicalArgoScan;
 import org.apache.doris.nereids.trees.plans.logical.LogicalCTEConsumer;
 import org.apache.doris.nereids.trees.plans.logical.LogicalEsScan;
 import org.apache.doris.nereids.trees.plans.logical.LogicalFileScan;
@@ -431,6 +432,8 @@ public class BindRelation extends OneAnalysisRuleFactory {
                     return new LogicalEsScan(unboundRelation.getRelationId(), table, qualifierWithoutTableName);
                 case TEST_EXTERNAL_TABLE:
                     return new LogicalTestScan(unboundRelation.getRelationId(), table, qualifierWithoutTableName);
+                case ARGO_EXTERNAL_TABLE:
+                    return new LogicalArgoScan(unboundRelation.getRelationId(), table, qualifierWithoutTableName);
                 default:
                     throw new AnalysisException("Unsupported tableType " + table.getType());
             }

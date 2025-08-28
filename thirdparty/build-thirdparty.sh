@@ -376,12 +376,12 @@ build_openssl() {
     make install_sw
     # NOTE(zc): remove this dynamic library files to make libcurl static link.
     # If I don't remove this files, I don't known how to make libcurl link static library
-    if [[ -f "${TP_INSTALL_DIR}/lib64/libcrypto.so" ]]; then
-        rm -rf "${TP_INSTALL_DIR}"/lib64/libcrypto.so*
-    fi
-    if [[ -f "${TP_INSTALL_DIR}/lib64/libssl.so" ]]; then
-        rm -rf "${TP_INSTALL_DIR}"/lib64/libssl.so*
-    fi
+    # if [[ -f "${TP_INSTALL_DIR}/lib64/libcrypto.so" ]]; then
+    #     rm -rf "${TP_INSTALL_DIR}"/lib64/libcrypto.so*
+    # fi
+    # if [[ -f "${TP_INSTALL_DIR}/lib64/libssl.so" ]]; then
+    #     rm -rf "${TP_INSTALL_DIR}"/lib64/libssl.so*
+    # fi
     remove_all_dylib
 }
 
@@ -438,7 +438,7 @@ build_protobuf() {
         -DCMAKE_PREFIX_PATH="${TP_INSTALL_DIR}" \
         -Dprotobuf_USE_EXTERNAL_GTEST=ON \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-        -Dprotobuf_BUILD_SHARED_LIBS=OFF \
+        -Dprotobuf_BUILD_SHARED_LIBS=ON \
         -Dprotobuf_BUILD_TESTS=OFF \
         -DZLIB_LIBRARY="${TP_LIB_DIR}/libz.a" \
         -Dprotobuf_ABSL_PROVIDER=package \
@@ -446,8 +446,8 @@ build_protobuf() {
 
     make -j "${PARALLEL}"
     make install
-    strip_lib libprotobuf.a
-    strip_lib libprotoc.a
+    # strip_lib libprotobuf.a
+    # strip_lib libprotoc.a
 }
 
 # gflags
@@ -462,7 +462,7 @@ build_gflags() {
     rm -rf CMakeCache.txt CMakeFiles/
 
     "${CMAKE_CMD}" -G "${GENERATOR}" -DCMAKE_INSTALL_PREFIX="${TP_INSTALL_DIR}" \
-        -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=On ../
+        -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=On -DBUILD_SHARED_LIBS=ON ../
 
     "${BUILD_SYSTEM}" -j "${PARALLEL}"
     "${BUILD_SYSTEM}" install
@@ -490,13 +490,13 @@ build_glog() {
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
             -DWITH_UNWIND=OFF \
-            -DBUILD_SHARED_LIBS=OFF \
+            -DBUILD_SHARED_LIBS=ON \
             -DWITH_TLS=OFF
 
         cmake --build build --target install
     fi
 
-    strip_lib libglog.a
+    # strip_lib libglog.a
 }
 
 # gtest
@@ -546,6 +546,7 @@ build_snappy() {
 
     CFLAGS="-O3" CXXFLAGS="-O3" "${CMAKE_CMD}" -G "${GENERATOR}" -DCMAKE_INSTALL_PREFIX="${TP_INSTALL_DIR}" \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+        -DBUILD_SHARED_LIBS=ON \
         -DCMAKE_INSTALL_INCLUDEDIR="${TP_INCLUDE_DIR}"/snappy \
         -DSNAPPY_BUILD_TESTS=0 ../
 
@@ -685,10 +686,10 @@ build_re2() {
     check_if_source_exist "${RE2_SOURCE}"
     cd "${TP_SOURCE_DIR}/${RE2_SOURCE}"
 
-    "${CMAKE_CMD}" -DCMAKE_BUILD_TYPE=Release -G "${GENERATOR}" -DBUILD_SHARED_LIBS=0 -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+    "${CMAKE_CMD}" -DCMAKE_BUILD_TYPE=Release -G "${GENERATOR}" -DBUILD_SHARED_LIBS=1 -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
         -DCMAKE_PREFIX_PATH="${TP_INSTALL_DIR}" -DCMAKE_INSTALL_PREFIX="${TP_INSTALL_DIR}"
     "${BUILD_SYSTEM}" -j "${PARALLEL}" install
-    strip_lib libre2.a
+    # strip_lib libre2.a
 }
 
 # hyperscan
@@ -870,6 +871,17 @@ build_rocksdb() {
     strip_lib librocksdb.a
 }
 
+# lmdb
+build_lmdb() {
+    check_if_source_exist "${LMDB_SOURCE}"
+    cd "${TP_SOURCE_DIR}/${LMDB_SOURCE}"/libraries/liblmdb/
+
+    make -j "${PARALLEL}"
+    make install prefix=${TP_INSTALL_DIR}
+    # cp lmdb.h "${TP_INSTALL_DIR}"/include
+    # cp liblmdb.so "${TP_INSTALL_DIR}"/lib
+}
+
 # cyrus_sasl
 build_cyrus_sasl() {
     check_if_source_exist "${CYRUS_SASL_SOURCE}"
@@ -879,7 +891,7 @@ build_cyrus_sasl() {
         CPPFLAGS="-I${TP_INCLUDE_DIR}" \
         LDFLAGS="-L${TP_LIB_DIR}" \
         LIBS="-lcrypto" \
-        ./configure --prefix="${TP_INSTALL_DIR}" --enable-static --enable-shared=no --with-openssl="${TP_INSTALL_DIR}" --with-pic --enable-gssapi="${TP_INSTALL_DIR}" --with-gss_impl=mit --with-dblib=none
+        ./configure --prefix="${TP_INSTALL_DIR}" --enable-static=no --enable-shared=yes --with-openssl="${TP_INSTALL_DIR}" --with-pic --enable-gssapi="${TP_INSTALL_DIR}" --with-gss_impl=mit --with-dblib=lmdb
 
     if [[ "${KERNEL}" != 'Darwin' ]]; then
         make -j "${PARALLEL}"
@@ -968,8 +980,8 @@ build_cares() {
     mkdir -p build
     cd build
     cmake -DCMAKE_BUILD_TYPE=Release \
-        -DCARES_STATIC=ON \
-        -DCARES_SHARED=OFF \
+        -DCARES_STATIC=OFF \
+        -DCARES_SHARED=ON \
         -DCARES_STATIC_PIC=ON \
         -DCMAKE_INSTALL_PREFIX="${TP_INSTALL_DIR}" ..
     make
@@ -987,6 +999,7 @@ build_grpc() {
     cmake -DgRPC_INSTALL=ON \
         -DgRPC_BUILD_TESTS=OFF \
         -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_SHARED_LIBS=ON \
         -DCMAKE_INSTALL_PREFIX="${TP_INSTALL_DIR}" \
         -DgRPC_CARES_PROVIDER=package \
         -Dc-ares_DIR="${TP_INSTALL_DIR}" \
@@ -1103,7 +1116,7 @@ build_abseil() {
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
         -DABSL_PROPAGATE_CXX_STD=ON \
-        -DBUILD_SHARED_LIBS=OFF
+        -DBUILD_SHARED_LIBS=ON
 
     cmake --build "${BUILD_DIR}" -j "${PARALLEL}"
     cmake --install "${BUILD_DIR}" --prefix "${TP_INSTALL_DIR}"
@@ -1353,7 +1366,7 @@ build_aws_sdk() {
 
     # -Wno-nonnull gcc-11
     "${CMAKE_CMD}" -G "${GENERATOR}" -B"${BUILD_DIR}" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX="${TP_INSTALL_DIR}" \
-        -DCMAKE_PREFIX_PATH="${TP_INSTALL_DIR}" -DBUILD_SHARED_LIBS=OFF -DENABLE_TESTING=OFF \
+        -DCMAKE_PREFIX_PATH="${TP_INSTALL_DIR}" -DBUILD_SHARED_LIBS=ON -DENABLE_TESTING=OFF \
         -DCURL_LIBRARY_RELEASE="${TP_INSTALL_DIR}/lib/libcurl.a" -DZLIB_LIBRARY_RELEASE="${TP_INSTALL_DIR}/lib/libz.a" \
         -DBUILD_ONLY="core;s3;s3-crt;transfer;identity-management;sts" \
         -DCMAKE_CXX_FLAGS="-Wno-nonnull -Wno-deprecated-declarations ${warning_dangling_reference}" -DCPP_STANDARD=17
@@ -1362,24 +1375,24 @@ build_aws_sdk() {
 
     "${BUILD_SYSTEM}" -j "${PARALLEL}"
     "${BUILD_SYSTEM}" install
-    strip_lib libaws-cpp-sdk-s3-crt.a
-    strip_lib libaws-cpp-sdk-s3.a
-    strip_lib libaws-cpp-sdk-core.a
-    strip_lib libs2n.a
-    strip_lib libaws-crt-cpp.a
-    strip_lib libaws-c-http.a
-    strip_lib libaws-c-common.a
-    strip_lib libaws-c-auth.a
-    strip_lib libaws-c-io.a
-    strip_lib libaws-c-mqtt.a
-    strip_lib libaws-c-s3.a
-    strip_lib libaws-c-event-stream.a
-    strip_lib libaws-c-cal.a
-    strip_lib libaws-cpp-sdk-transfer.a
-    strip_lib libaws-checksums.a
-    strip_lib libaws-c-compression.a
-    strip_lib libaws-cpp-sdk-identity-management.a
-    strip_lib libaws-cpp-sdk-sts.a
+    # strip_lib libaws-cpp-sdk-s3-crt.a
+    # strip_lib libaws-cpp-sdk-s3.a
+    # strip_lib libaws-cpp-sdk-core.a
+    # strip_lib libs2n.a
+    # strip_lib libaws-crt-cpp.a
+    # strip_lib libaws-c-http.a
+    # strip_lib libaws-c-common.a
+    # strip_lib libaws-c-auth.a
+    # strip_lib libaws-c-io.a
+    # strip_lib libaws-c-mqtt.a
+    # strip_lib libaws-c-s3.a
+    # strip_lib libaws-c-event-stream.a
+    # strip_lib libaws-c-cal.a
+    # strip_lib libaws-cpp-sdk-transfer.a
+    # strip_lib libaws-checksums.a
+    # strip_lib libaws-c-compression.a
+    # strip_lib libaws-cpp-sdk-identity-management.a
+    # strip_lib libaws-cpp-sdk-sts.a
 }
 
 # lzma
@@ -1476,7 +1489,7 @@ build_krb5() {
     fi
 
     CFLAGS="-fcommon -fPIC -I${TP_INSTALL_DIR}/include" LDFLAGS="-L${TP_INSTALL_DIR}/lib" \
-        ../configure --prefix="${TP_INSTALL_DIR}" --disable-shared --enable-static \
+        ../configure --prefix="${TP_INSTALL_DIR}" --enable-shared --disable-static \
         --without-keyutils ${with_crypto_impl:+${with_crypto_impl}}
 
     make -j "${PARALLEL}"
@@ -1915,6 +1928,7 @@ if [[ "${#packages[@]}" -eq 0 ]]; then
         jemalloc_doris
         rocksdb
         krb5 # before cyrus_sasl
+        lmdb # before cysus_sasl
         cyrus_sasl
         librdkafka
         flatbuffers

@@ -550,6 +550,7 @@ if [[ "${BUILD_BE_JAVA_EXTENSIONS}" -eq 1 ]]; then
     modules+=("be-java-extensions/avro-scanner")
     modules+=("be-java-extensions/lakesoul-scanner")
     modules+=("be-java-extensions/preload-extensions")
+    # modules+=("be-java-extensions/argo-scanner")
 
     # If the BE_EXTENSION_IGNORE variable is not empty, remove the modules that need to be ignored from FE_MODULES
     if [[ -n "${BE_EXTENSION_IGNORE}" ]]; then
@@ -617,7 +618,9 @@ if [[ "${BUILD_BE}" -eq 1 ]]; then
         -DENABLE_CLANG_COVERAGE="${DENABLE_CLANG_COVERAGE}" \
         -DDORIS_JAVA_HOME="${JAVA_HOME}" \
         -DBUILD_AZURE="${BUILD_AZURE}" \
-        "${DORIS_HOME}/be"
+        -DORC_PREFER_STATIC_PROTOBUF=OFF \
+        "${DORIS_HOME}/be" 
+        # --trace-expand
 
     if [[ "${OUTPUT_BE_BINARY}" -eq 1 ]]; then
         "${BUILD_SYSTEM}" -j "${PARALLEL}"

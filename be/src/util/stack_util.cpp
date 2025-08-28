@@ -27,11 +27,11 @@
 #include "util/mem_info.h"
 #include "util/pretty_printer.h"
 
-namespace google {
-namespace glog_internal_namespace_ {
-void DumpStackTraceToString(std::string* stacktrace);
-}
-} // namespace google
+// namespace google {
+// namespace glog_internal_namespace_ {
+// void DumpStackTraceToString(std::string* stacktrace);
+// }
+// } // namespace google
 
 namespace doris {
 
@@ -67,7 +67,7 @@ std::string get_stack_trace(int start_pointers_index, std::string dwarf_location
 
 std::string get_stack_trace_by_glog() {
     std::string s;
-    google::glog_internal_namespace_::DumpStackTraceToString(&s);
+    // google::glog_internal_namespace_::DumpStackTraceToString(&s);
     return s;
 }
 

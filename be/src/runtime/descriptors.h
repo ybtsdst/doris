@@ -333,6 +333,12 @@ private:
     bool _connection_pool_keep_alive;
 };
 
+class ArgoTableDescriptor : public TableDescriptor {
+public:
+    ArgoTableDescriptor(const TTableDescriptor& tdesc);
+    std::string debug_string() const override;
+};
+
 class TupleDescriptor {
 public:
     TupleDescriptor(TupleDescriptor&&) = delete;

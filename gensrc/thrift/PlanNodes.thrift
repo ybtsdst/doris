@@ -58,7 +58,8 @@ enum TPlanNodeType {
   JDBC_SCAN_NODE,
   TEST_EXTERNAL_SCAN_NODE,
   PARTITION_SORT_NODE,
-  GROUP_COMMIT_SCAN_NODE
+  GROUP_COMMIT_SCAN_NODE,
+  ARGO_SCAN_NODE
 }
 
 // phases of an execution node
@@ -749,6 +750,11 @@ struct TTestExternalScanNode {
   2: optional string table_name
 }
 
+struct TArgoScanNode {
+  1: required Types.TTupleId tuple_id
+  2: optional string table_name
+}
+
 struct TSortInfo {
   1: required list<Exprs.TExpr> ordering_exprs
   2: required list<bool> is_asc_order
@@ -1396,6 +1402,8 @@ struct TPlanNode {
 
   106: optional list<i32> topn_filter_source_node_ids
   107: optional i32 nereids_id
+
+  108: optional TArgoScanNode argo_scan_node
 }
 
 // A flattened representation of a tree of PlanNodes, obtained by depth-first

@@ -132,6 +132,9 @@ import org.apache.doris.datasource.CatalogIf;
 import org.apache.doris.datasource.ExternalDatabase;
 import org.apache.doris.datasource.ExternalTable;
 import org.apache.doris.datasource.InternalCatalog;
+import org.apache.doris.datasource.argo.ArgoExternalCatalog;
+import org.apache.doris.datasource.argo.ArgoExternalDatabase;
+import org.apache.doris.datasource.argo.ArgoExternalTable;
 import org.apache.doris.datasource.es.EsExternalCatalog;
 import org.apache.doris.datasource.es.EsExternalDatabase;
 import org.apache.doris.datasource.es.EsExternalTable;
@@ -424,7 +427,8 @@ public class GsonUtils {
                             TrinoConnectorExternalCatalog.class, TrinoConnectorExternalCatalog.class.getSimpleName())
                 .registerSubtype(LakeSoulExternalCatalog.class, LakeSoulExternalCatalog.class.getSimpleName())
                 .registerSubtype(TestExternalCatalog.class, TestExternalCatalog.class.getSimpleName())
-                .registerSubtype(PaimonDLFExternalCatalog.class, PaimonDLFExternalCatalog.class.getSimpleName());
+                .registerSubtype(PaimonDLFExternalCatalog.class, PaimonDLFExternalCatalog.class.getSimpleName())
+                .registerSubtype(ArgoExternalCatalog.class, ArgoExternalCatalog.class.getSimpleName());
         if (Config.isNotCloudMode()) {
             dsTypeAdapterFactory
                     .registerSubtype(InternalCatalog.class, InternalCatalog.class.getSimpleName());
@@ -465,7 +469,8 @@ public class GsonUtils {
             .registerSubtype(ExternalInfoSchemaDatabase.class, ExternalInfoSchemaDatabase.class.getSimpleName())
             .registerSubtype(ExternalMysqlDatabase.class, ExternalMysqlDatabase.class.getSimpleName())
             .registerSubtype(TrinoConnectorExternalDatabase.class, TrinoConnectorExternalDatabase.class.getSimpleName())
-            .registerSubtype(TestExternalDatabase.class, TestExternalDatabase.class.getSimpleName());
+            .registerSubtype(TestExternalDatabase.class, TestExternalDatabase.class.getSimpleName())
+            .registerSubtype(ArgoExternalDatabase.class, ArgoExternalDatabase.class.getSimpleName());
 
     private static RuntimeTypeAdapterFactory<TableIf> tblTypeAdapterFactory = RuntimeTypeAdapterFactory.of(
                     TableIf.class, "clazz").registerSubtype(ExternalTable.class, ExternalTable.class.getSimpleName())
@@ -492,6 +497,7 @@ public class GsonUtils {
             .registerSubtype(MysqlTable.class, MysqlTable.class.getSimpleName())
             .registerSubtype(OdbcTable.class, OdbcTable.class.getSimpleName())
             .registerSubtype(SchemaTable.class, SchemaTable.class.getSimpleName())
+            .registerSubtype(ArgoExternalTable.class, ArgoExternalTable.class.getSimpleName())
             .registerSubtype(View.class, View.class.getSimpleName());
 
     // runtime adapter for class "PartitionInfo"

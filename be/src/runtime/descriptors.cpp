@@ -305,6 +305,13 @@ std::string JdbcTableDescriptor::debug_string() const {
     return fmt::to_string(buf);
 }
 
+ArgoTableDescriptor::ArgoTableDescriptor(const TTableDescriptor& tdesc) : TableDescriptor(tdesc) {}
+std::string ArgoTableDescriptor::debug_string() const {
+    fmt::memory_buffer buf;
+    fmt::format_to(buf, "ArgoTable({})", TableDescriptor::debug_string());
+    return fmt::to_string(buf);
+}
+
 TupleDescriptor::TupleDescriptor(const TTupleDescriptor& tdesc, bool own_slots)
         : _id(tdesc.id),
           _num_materialized_slots(0),
@@ -576,6 +583,9 @@ Status DescriptorTbl::create(ObjectPool* pool, const TDescriptorTable& thrift_tb
             break;
         case TTableType::TRINO_CONNECTOR_TABLE:
             desc = pool->add(new TrinoConnectorTableDescriptor(tdesc));
+            break;
+        case TTableType::ARGO_TABLE:
+            desc = pool->add(new ArgoTableDescriptor(tdesc));
             break;
         default:
             DCHECK(false) << "invalid table type: " << tdesc.tableType;
