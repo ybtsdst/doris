@@ -299,6 +299,12 @@ std::shared_ptr<io::ObjStorageClient> S3ClientFactory::_create_s3_client(
     aws_config.retryStrategy = std::make_shared<S3CustomRetryStrategy>(
             config::max_s3_client_retry /*scaleFactor = 25*/);
 
+    if (config::s3_proxy && !config::s3_proxy_host.empty() && config::s3_proxy_port > 0) {
+        aws_config.proxyScheme = Aws::Http::Scheme::HTTP;
+        aws_config.proxyHost = config::s3_proxy_host;
+        aws_config.proxyPort = config::s3_proxy_port;
+    }
+
     std::shared_ptr<Aws::S3::S3Client> new_client = std::make_shared<Aws::S3::S3Client>(
             get_aws_credentials_provider(s3_conf), std::move(aws_config),
             Aws::Client::AWSAuthV4Signer::PayloadSigningPolicy::Never,

@@ -1392,6 +1392,11 @@ DEFINE_Validator(s3_client_http_scheme, [](const std::string& config) -> bool {
     return config == "http" || config == "https";
 });
 
+// s3 proxy
+DEFINE_mBool(s3_proxy, "false");
+DEFINE_mString(s3_proxy_host, "");
+DEFINE_mInt32(s3_proxy_port, "0");
+
 DEFINE_mBool(ignore_schema_change_check, "false");
 
 DEFINE_mInt64(string_overflow_size, "4294967295"); // std::numic_limits<uint32_t>::max()

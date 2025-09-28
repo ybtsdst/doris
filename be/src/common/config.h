@@ -1462,6 +1462,10 @@ DECLARE_mInt32(thrift_client_open_num_tries);
 // http scheme in S3Client to use. E.g. http or https
 DECLARE_String(s3_client_http_scheme);
 
+DECLARE_mBool(s3_proxy);
+DECLARE_mString(s3_proxy_host);
+DECLARE_mInt32(s3_proxy_port);
+
 DECLARE_mBool(ignore_schema_change_check);
 
 /** Only use in fuzzy test **/

@@ -17,6 +17,7 @@
 
 package org.apache.doris.common.util;
 
+import org.apache.doris.common.Config;
 import org.apache.doris.common.credentials.CloudCredential;
 
 import com.google.common.base.Strings;
@@ -36,9 +37,12 @@ import software.amazon.awssdk.core.client.config.ClientOverrideConfiguration;
 import software.amazon.awssdk.core.client.config.SdkAdvancedClientOption;
 import software.amazon.awssdk.core.retry.RetryPolicy;
 import software.amazon.awssdk.core.retry.backoff.EqualJitterBackoffStrategy;
+import software.amazon.awssdk.http.apache.ProxyConfiguration;
 import software.amazon.awssdk.http.urlconnection.UrlConnectionHttpClient;
+import software.amazon.awssdk.http.apache.ApacheHttpClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3ClientBuilder;
 import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.services.sts.StsClient;
 import software.amazon.awssdk.services.sts.auth.StsAssumeRoleCredentialsProvider;
@@ -171,9 +175,39 @@ public class S3Util {
                 // using AwsS3V4Signer
                 .putAdvancedOption(SdkAdvancedClientOption.SIGNER, AwsS3V4Signer.create())
                 .build();
-        return S3Client.builder()
-                .httpClient(UrlConnectionHttpClient.builder().socketTimeout(Duration.ofSeconds(30))
-                        .connectionTimeout(Duration.ofSeconds(30)).build())
+
+        S3ClientBuilder builder = S3Client.builder();
+ 
+        URI proxyUri = null;
+        if (Config.s3_proxy && !Strings.isNullOrEmpty(Config.s3_proxy_host) && Config.s3_proxy_port > 0) {
+            String hostUrl = Config.s3_proxy_host.startsWith("http") ? Config.s3_proxy_host :
+                "http://" + Config.s3_proxy_host;
+            proxyUri = URI.create(hostUrl + ":" + Config.s3_proxy_port);
+        }
+        if (Config.s3_use_http_client) {
+            ApacheHttpClient.Builder httpClientBuilder = ApacheHttpClient.builder()
+                .socketTimeout(Duration.ofSeconds(30))
+                .connectionTimeout(Duration.ofSeconds(30))
+                .expectContinueEnabled(false)
+                .maxConnections(500);
+            if (proxyUri != null) {
+                httpClientBuilder.proxyConfiguration(ProxyConfiguration.builder()
+                    .endpoint(proxyUri)
+                    .build());
+            }
+            builder.httpClient(httpClientBuilder.build());
+        } else {
+            UrlConnectionHttpClient.Builder httpClientBuilder = UrlConnectionHttpClient.builder().socketTimeout(Duration.ofSeconds(30))
+                .connectionTimeout(Duration.ofSeconds(30));
+            if (proxyUri != null) {
+                httpClientBuilder.proxyConfiguration(software.amazon.awssdk.http.urlconnection.ProxyConfiguration.builder()
+                        .endpoint(proxyUri)
+                        .scheme(proxyUri.getScheme())
+                    .build());
+            }
+            builder.httpClient(httpClientBuilder.build());
+        }
+        return builder
                 .endpointOverride(endpoint)
                 .credentialsProvider(getAwsCredencialsProvider(endpoint, region, accessKey, secretKey,
                         sessionToken, roleArn, externalId))

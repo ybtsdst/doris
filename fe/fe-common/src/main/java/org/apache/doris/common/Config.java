@@ -3173,6 +3173,18 @@ public class Config extends ConfigBase {
             + "for example: s3_load_endpoint_white_list=a,b,c"})
     public static String[] s3_load_endpoint_white_list = {};
 
+    @ConfField(mutable = true, masterOnly = false)
+    public static boolean s3_use_http_client  = false;
+
+    @ConfField(mutable = true, masterOnly = false)
+    public static boolean s3_proxy  = false;
+
+    @ConfField(mutable = true, masterOnly = false)
+    public static String s3_proxy_host  = "";
+
+    @ConfField(mutable = true, masterOnly = false)
+    public static int s3_proxy_port  = 0;
+
     @ConfField(mutable = true, description = {
             "此参数控制是否强制使用 Azure global endpoint。默认值为 false，系统将使用用户指定的 endpoint。"
             + "如果设置为 true，系统将强制使用 {account}.blob.core.windows.net。",

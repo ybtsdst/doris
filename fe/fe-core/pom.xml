@@ -511,6 +511,11 @@ under the License.
                 </exclusion-->
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>apache-client</artifactId>
+            <version>${awssdk.version}</version>
+        </dependency>
         <!-- tencent cloud sts -->
         <dependency>
             <groupId>com.tencentcloudapi</groupId>
@@ -698,10 +703,10 @@ under the License.
             <artifactId>glue</artifactId>
             <version>${awssdk.version}</version>
             <exclusions>
-                <exclusion>
-                    <groupId>software.amazon.awssdk</groupId>
-                    <artifactId>apache-client</artifactId>
-                </exclusion>
+<!--                <exclusion>-->
+<!--                    <groupId>software.amazon.awssdk</groupId>-->
+<!--                    <artifactId>apache-client</artifactId>-->
+<!--                </exclusion>-->
             </exclusions>
         </dependency>
         <dependency>
@@ -709,10 +714,10 @@ under the License.
             <artifactId>sts</artifactId>
             <version>${awssdk.version}</version>
             <exclusions>
-                <exclusion>
-                    <groupId>software.amazon.awssdk</groupId>
-                    <artifactId>apache-client</artifactId>
-                </exclusion>
+<!--                <exclusion>-->
+<!--                    <groupId>software.amazon.awssdk</groupId>-->
+<!--                    <artifactId>apache-client</artifactId>-->
+<!--                </exclusion>-->
             </exclusions>
         </dependency>
         <dependency>
