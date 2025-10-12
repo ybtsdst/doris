@@ -26,6 +26,8 @@ RUN \
   sed -i 's/security.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list && \
   echo 'Acquire::ForceIPv4 "true";' >> /etc/apt/apt.conf.d/1000-force-ipv4-transport && \    
   echo 'Acquire::Retries "100";' >> /etc/apt/apt.conf.d/80-retries && \
+  echo 'Acquire::http::Proxy "${HTTP_PROXY}";' >> /etc/apt/apt.conf.d/99-proxy && \
+  echo 'Acquire::https::Proxy "${HTTPS_PROXY}";' >> /etc/apt/apt.conf.d/99-proxy && \
   apt-get update -y && \    
   # basics    
   PKGS="software-properties-common" && \
