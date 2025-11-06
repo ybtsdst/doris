@@ -34,8 +34,8 @@ RUN \
   apt-get install -y ${PKGS} && \    
   add-apt-repository -y ppa:ubuntu-toolchain-r/ppa && \
   apt-get update -y && \    
-  PKGS="vim sudo locales git curl unzip wget zip iputils-ping iproute2 tzdata tree" && \    
-  PKGS="${PKGS} gdb net-tools telnet ccache" && \    
+  PKGS="vim sudo locales git curl unzip wget zip iputils-ping iproute2 tzdata tree jq" && \    
+  PKGS="${PKGS} gdb net-tools telnet ccache linux-tools-common linux-tools-generic" && \    
   apt-get install -y ${PKGS} && \    
   locale-gen en_US.UTF-8 && \    
   echo ${TZ} > /etc/timezone && \

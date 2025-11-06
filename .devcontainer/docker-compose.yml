@@ -22,6 +22,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${LOCAL_MVN_REPO}:/home/dev/.m2:cached
       - ${LOCAL_CCACHE}:/opt/ccache:cached
+      - ${LOCAL_DORIS_CLUSTER}:/opt/doris_local_cluster:cached
     working_dir: /opt/transwarp/doris
     network_mode: host 
     tty: true
