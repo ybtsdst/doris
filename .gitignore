@@ -145,5 +145,5 @@ compile_commands.json
 .github
 
 instances
-output_backup
-output_cloud
+local/
+output*/
