@@ -1,0 +1,29 @@
+services:
+  doris_dev_service:
+    build:
+      context: .
+      network: host
+      dockerfile: Dockerfile
+      args:
+        - HTTP_PROXY
+        - DEV_USERNAME
+        - USER_UID
+        - USER_GID
+    env_file:
+      - .env
+    container_name: doris_dev
+    privileged: true
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp=unconfined
+    volumes:
+      - ..:/opt/transwarp/doris:cached
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${LOCAL_MVN_REPO}:/home/dev/.m2:cached
+      - ${LOCAL_CCACHE}:/opt/ccache:cached
+      - ${LOCAL_DORIS_CLUSTER}:/opt/doris_local_cluster:cached
+    working_dir: /opt/transwarp/doris
+    network_mode: host 
+    tty: true
+    stdin_open: true
