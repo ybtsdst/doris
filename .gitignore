@@ -150,3 +150,6 @@ local/
 output_cloud/
 tmp/
 .worktrees/
+local/
+output_cloud/
+tmp/
