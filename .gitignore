@@ -149,3 +149,4 @@ compile_commands.json
 local/
 output_cloud/
 tmp/
+.worktrees/
