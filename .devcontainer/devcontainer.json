@@ -1,9 +1,9 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/cpp
 {
-    "name": "doris dev",
+    "name": "apache doris dev",
     "dockerComposeFile": "docker-compose.yml",
-    "service": "doris_dev_service",
+    "service": "apache_doris_dev_service",
     "workspaceFolder": "/opt/transwarp/doris",
     "customizations": {
         "vscode": {

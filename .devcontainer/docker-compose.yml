@@ -1,5 +1,5 @@
 services:
-  doris_dev_service:
+  apache_doris_dev_service:
     build:
       context: .
       network: host
@@ -11,7 +11,7 @@ services:
         - USER_GID
     env_file:
       - .env
-    container_name: doris_dev
+    container_name: apache_doris_dev
     privileged: true
     cap_add:
       - SYS_PTRACE
