@@ -55,17 +55,25 @@ RUN \
   && rm /tmp/ldb_toolchain_gen_025.sh
 
 RUN \
-    # clangd
-    wget "https://github.com/clangd/clangd/releases/download/${CLANGD_VERSION}/clangd-linux-${CLANGD_VERSION}.zip" -O /tmp/clangd.zip && \
-    unzip /tmp/clangd.zip -d ${CLANGD_HOME} && \
-    mv ${CLANGD_HOME}/clangd_${CLANGD_VERSION}/* ${CLANGD_HOME} && \
-    rm -rf ${CLANGD_HOME}/clangd_${CLANGD_VERSION} && \
-    rm -rf /tmp/clangd.zip && \
-    # maven
-    wget https://mirrors.aliyun.com/apache/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz -O /tmp/maven.tar.gz && \
-    tar -zxvf /tmp/maven.tar.gz -C /usr/local/ && \
-    mv /usr/local/apache-maven-${MAVEN_VERSION} ${MAVEN_HOME} && \
-    rm -rf /tmp/maven.tar.gz 
+  # clangd
+  wget "https://github.com/clangd/clangd/releases/download/${CLANGD_VERSION}/clangd-linux-${CLANGD_VERSION}.zip" -O /tmp/clangd.zip && \
+  unzip /tmp/clangd.zip -d ${CLANGD_HOME} && \
+  mv ${CLANGD_HOME}/clangd_${CLANGD_VERSION}/* ${CLANGD_HOME} && \
+  rm -rf ${CLANGD_HOME}/clangd_${CLANGD_VERSION} && \
+  rm -rf /tmp/clangd.zip
+# # maven
+# TODO: fix later
+# wget https://mirrors.aliyun.com/apache/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz -O /tmp/maven.tar.gz && \
+# tar -zxvf /tmp/maven.tar.gz -C /usr/local/ && \
+# mv /usr/local/apache-maven-${MAVEN_VERSION} ${MAVEN_HOME} && \
+# rm -rf /tmp/maven.tar.gz 
+
+COPY tmp/apache-maven-3.9.12-bin.tar.gz /tmp/maven.tar.gz
+
+RUN \
+  tar -zxvf /tmp/maven.tar.gz -C /usr/local/ && \
+  mv /usr/local/apache-maven-${MAVEN_VERSION} ${MAVEN_HOME} && \
+  rm -rf /tmp/maven.tar.gz
 
 COPY settings.xml ${MAVEN_HOME}/conf
 

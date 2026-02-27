@@ -30,7 +30,7 @@ If:
   PathMatch: be/.*
 
 CompileFlags:
-  CompilationDatabase: be/build_Debug
+  CompilationDatabase: be/build_ASAN
 
 ---
 
@@ -38,7 +38,7 @@ If:
   PathMatch: cloud/.*
 
 CompileFlags:
-  CompilationDatabase: cloud/build_Debug
+  CompilationDatabase: cloud/build_ASAN
   Add: 
   - -isystem
   - /opt/transwarp/doris/gensrc/build
