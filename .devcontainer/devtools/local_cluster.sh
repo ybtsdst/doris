@@ -6,15 +6,15 @@ fe_output_dir=${project_dir}/output/fe
 cluster_config_file=/opt/transwarp/doris/.devcontainer/devtools/local_cluster.json
 cluster_base_path=/opt/doris_local_cluster/cluster
 
-be_port=9060
-be_webserver_port=8040
-be_heartbeat_service_port=9050
-be_brpc_port=8060
+be_port=19060
+be_webserver_port=18040
+be_heartbeat_service_port=19050
+be_brpc_port=18060
 
-fe_http_port=8030
-fe_rpc_port=9020
-fe_query_port=9030
-fe_edit_log_port=9010
+fe_http_port=18030
+fe_rpc_port=19020
+fe_query_port=19030
+fe_edit_log_port=19010
 
 function get_cluster_config {
     local cluster_id=${1:-0}
