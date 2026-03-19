@@ -50,6 +50,24 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Schema Change handler for the storage-compute separation (cloud) architecture.
+ *
+ * <p>This class extends {@link SchemaChangeHandler} and overrides methods that need
+ * to interact with cloud infrastructure (MetaService) rather than managing tablet
+ * replicas directly on BE local disks.
+ *
+ * <p>In storage-compute separation mode, tablet metadata (including index schema) is
+ * managed by the MetaService. When creating an index (e.g. {@code ALTER TABLE ... ADD INDEX}),
+ * the handler delegates to {@link CloudSchemaChangeJobV2} which communicates with
+ * MetaService via {@link org.apache.doris.cloud.datasource.CloudInternalCatalog} RPCs.
+ *
+ * <p>This handler is activated when {@code Config.isCloudMode()} returns {@code true}.
+ * It is instantiated by {@link org.apache.doris.alter.Alter} at startup.
+ *
+ * @see CloudSchemaChangeJobV2
+ * @see org.apache.doris.alter.SchemaChangeHandler
+ */
 public class CloudSchemaChangeHandler extends SchemaChangeHandler {
     private static final Logger LOG = LogManager.getLogger(CloudSchemaChangeHandler.class);
 
