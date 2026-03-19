@@ -78,7 +78,7 @@ import java.util.stream.Collectors;
  * and clean up any partially created SchemaChangeJob records.
  */
 public class CloudSchemaChangeJobV2 extends SchemaChangeJobV2 {
-    private static final Logger LOG = LogManager.getLogger(CloudSchemaChangeJobV2.class);
+    private static final Logger LOG = LogManager.getLogger(SchemaChangeJobV2.class);
 
     /**
      * Creates a new CloudSchemaChangeJobV2 and binds it to the current compute group (cloud cluster).
